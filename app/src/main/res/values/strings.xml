@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ServerApp</string>
+    <string name="facebook_app_id">407532630107476</string>
+    <string name="fb_login_protocol_scheme">fb407532630107476</string>
+    <string name="fb_appkey">407532630107476</string>
+    <string name="logout">Sign Out</string>
+    <string name="settings">Settings</string>
+</resources>
