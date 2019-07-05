@@ -4,15 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,14 +23,18 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.serverapp.Retrofit.IAppService;
 import com.example.serverapp.Retrofit.RetrofitClient;
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import java.security.MessageDigest;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -65,6 +66,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        finish();
+        Intent resultIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, resultIntent);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -72,7 +80,6 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Service
         Retrofit retrofitClient = RetrofitClient.getInstance();
         iAppService = retrofitClient.create(IAppService.class);
-//        getAppKeyHash();
 
         loginEmail = findViewById(R.id.emailText);
         loginPassword = findViewById(R.id.passwordText);
@@ -89,11 +96,41 @@ public class LoginActivity extends AppCompatActivity {
         facebookLoginButton = findViewById(R.id.facebookButton);
         callbackManager = CallbackManager.Factory.create();
         facebookLoginButton.registerCallback(callbackManager, new LoginCallback() {
+            private String[] data = new String[4];
+
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.e("Callback :: ", "onSuccess");
                 requestMe(loginResult.getAccessToken());
+                String ownerEmail = data[0];
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("owner_email", ownerEmail);
+                Log.e("Callback :: ", "Email : " + ownerEmail);
+                setResult(Activity.RESULT_OK, resultIntent);
                 finish();
+            }
+
+            @Override
+            public void requestMe(AccessToken token) {
+                GraphRequest graphRequest = GraphRequest.newMeRequest(token,
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                try {
+                                    data[0] = object.getString("id");
+                                    data[1] = object.getString("name");
+                                    data[2] = object.getString("email");
+                                    data[3] = object.getJSONObject("picture")
+                                            .getJSONObject("data").getString("url");
+                                } catch (JSONException ex) {
+                                    ex.printStackTrace();
+                                }
+                                Log.e("result", object.toString());
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,picture.width(200)");
+                graphRequest.setParameters(parameters);
+                graphRequest.executeAsync();
             }
         });
 
@@ -204,6 +241,10 @@ public class LoginActivity extends AppCompatActivity {
             loginPrefsEditor.commit();
         }
 
+        Intent resultIntent = new Intent();
+        Log.e("Callback :: ", "Email : " + savedEmail);
+        resultIntent.putExtra("owner_email", savedEmail);
+        setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }
 
@@ -219,28 +260,4 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }));
     }
-
-//    private void getAppKeyHash() {
-//        try {
-//            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-//            for (Signature signature : info.signatures) {
-//                MessageDigest md;
-//                md = MessageDigest.getInstance("SHA");
-//                md.update(signature.toByteArray());
-//                String something = new String(Base64.encode(md.digest(), 0));
-//                Log.e("Hash key", something);
-//            }
-//        } catch (Exception e) {
-//            Log.e("Name not found", e.toString());
-//        }
-//    }
 }
-
-// For Logout
-//btn_custom_logout = (Button) findViewById(R.id.btn_custom_logout);
-//btn_custom_logout.setOnClickListener(new View.OnClickListener() {
-//    @Override
-//    public void onClick(View view) {
-//        LoginManager.getInstance().logOut();
-//    }
-//});
