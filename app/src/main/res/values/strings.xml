@@ -5,4 +5,22 @@
     <string name="fb_appkey">407532630107476</string>
     <string name="logout">Sign Out</string>
     <string name="settings">Settings</string>
+    <string name="tab_1">TAB 1</string>
+    <string name="tab_2">TAB 2</string>
+    <string name="tab_3">TAB 3</string>
+    <string name="pref_sync_connection_default">Wifi</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="share">Share this image with</string>
+
+    <string-array name="pref_sync_connection_entries">
+        <item>Wi-fi</item>
+        <item>Mobile Data</item>
+        <item>Wi-fi / Mobile Data</item>
+    </string-array>
+
+    <string-array name="pref_sync_connection_values">
+        <item>Wifi</item>
+        <item>Mobile</item>
+        <item>Wifi_Mobile</item>
+    </string-array>
 </resources>
