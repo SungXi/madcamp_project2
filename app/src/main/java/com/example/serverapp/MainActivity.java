@@ -16,6 +16,7 @@ import android.view.MenuItem;
 
 import com.example.serverapp.Fragment0.Fragment0;
 import com.example.serverapp.Fragment1.Fragment1;
+import com.example.serverapp.Fragment2.Tab_3;
 import com.facebook.login.LoginManager;
 import com.google.android.material.tabs.TabLayout;
 
@@ -130,6 +131,11 @@ public class MainActivity extends AppCompatActivity {
                 fragmentTransaction1.commit();
                 break;
             case 2 :
+                fragment = new Tab_3();
+                FragmentManager fm2 = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction2 = fm2.beginTransaction();
+                fragmentTransaction2.replace(R.id.fragment, fragment);
+                fragmentTransaction2.commit();
                 break;
         }
     }

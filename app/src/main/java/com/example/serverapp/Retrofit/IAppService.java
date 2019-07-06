@@ -38,12 +38,6 @@ public interface IAppService {
     Observable<String> deleteImage(@Field("path") String path,
                                    @Field("owner_email") String owner_email);
 
-    @POST("upload_image")
-    @FormUrlEncoded
-    Observable<String> uploadImage (@Field("email") String email,
-                                    @Field("path") String path,
-                                    @Field("image") String base64);
-
     @POST("deletePerson")
     @FormUrlEncoded
     Observable<String> deletePerson (@Field("name") String name,
