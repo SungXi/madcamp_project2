@@ -119,9 +119,9 @@ public final class R {
         public static final int tag_unhandled_key_listeners = 0x7f090129;
         public static final int text = 0x7f09012c;
         public static final int text2 = 0x7f09012d;
-        public static final int time = 0x7f090135;
-        public static final int title = 0x7f090136;
-        public static final int top = 0x7f09013a;
+        public static final int time = 0x7f090137;
+        public static final int title = 0x7f090138;
+        public static final int top = 0x7f09013c;
     }
     public static final class integer {
         private integer() {}
@@ -131,12 +131,12 @@ public final class R {
     public static final class layout {
         private layout() {}
 
-        public static final int notification_action = 0x7f0c0051;
-        public static final int notification_action_tombstone = 0x7f0c0052;
-        public static final int notification_template_custom_big = 0x7f0c0059;
-        public static final int notification_template_icon_group = 0x7f0c005a;
-        public static final int notification_template_part_chronometer = 0x7f0c005e;
-        public static final int notification_template_part_time = 0x7f0c005f;
+        public static final int notification_action = 0x7f0c0050;
+        public static final int notification_action_tombstone = 0x7f0c0051;
+        public static final int notification_template_custom_big = 0x7f0c0058;
+        public static final int notification_template_icon_group = 0x7f0c0059;
+        public static final int notification_template_part_chronometer = 0x7f0c005d;
+        public static final int notification_template_part_time = 0x7f0c005e;
     }
     public static final class string {
         private string() {}

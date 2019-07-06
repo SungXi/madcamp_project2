@@ -64,10 +64,6 @@
         "source": "C:\\Users\\q\\.gradle\\caches\\transforms-2\\files-2.1\\d8f6411b7c25cf4f044ff8a81a27f0e1\\res\\drawable\\abc_item_background_holo_dark.xml"
     },
     {
-        "merged": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\build\\intermediates\\res\\merged\\debug\\layout_recyclerview_item2.xml.flat",
-        "source": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\src\\main\\res\\layout\\recyclerview_item2.xml"
-    },
-    {
         "merged": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\build\\intermediates\\res\\merged\\debug\\color_mtrl_tabs_ripple_color.xml.flat",
         "source": "C:\\Users\\q\\.gradle\\caches\\transforms-2\\files-2.1\\5b6753288c7ac79caade7ad2924a48bc\\res\\color\\mtrl_tabs_ripple_color.xml"
     },
@@ -1300,6 +1296,10 @@
         "source": "C:\\Users\\q\\.gradle\\caches\\transforms-2\\files-2.1\\613d748d0f0e9d3ce6bece2b3292c768\\res\\layout\\md_dialog_input.xml"
     },
     {
+        "merged": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\build\\intermediates\\res\\merged\\debug\\layout_tab3_image.xml.flat",
+        "source": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\src\\main\\res\\layout\\tab3_image.xml"
+    },
+    {
         "merged": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\build\\intermediates\\res\\merged\\debug\\drawable-v21_abc_btn_colored_material.xml.flat",
         "source": "C:\\Users\\q\\.gradle\\caches\\transforms-2\\files-2.1\\d8f6411b7c25cf4f044ff8a81a27f0e1\\res\\drawable-v21\\abc_btn_colored_material.xml"
     },
@@ -1812,10 +1812,6 @@
         "source": "C:\\Users\\q\\.gradle\\caches\\transforms-2\\files-2.1\\d8f6411b7c25cf4f044ff8a81a27f0e1\\res\\drawable-xhdpi-v4\\abc_ic_menu_copy_mtrl_am_alpha.png"
     },
     {
-        "merged": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\build\\intermediates\\res\\merged\\debug\\layout_fragment_2.xml.flat",
-        "source": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\src\\main\\res\\layout\\fragment_2.xml"
-    },
-    {
         "merged": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_abc_ic_menu_paste_mtrl_am_alpha.png.flat",
         "source": "C:\\Users\\q\\.gradle\\caches\\transforms-2\\files-2.1\\d8f6411b7c25cf4f044ff8a81a27f0e1\\res\\drawable-hdpi-v4\\abc_ic_menu_paste_mtrl_am_alpha.png"
     },
@@ -1892,10 +1888,6 @@
         "source": "C:\\Users\\q\\.gradle\\caches\\transforms-2\\files-2.1\\d8f6411b7c25cf4f044ff8a81a27f0e1\\res\\color-v23\\abc_tint_switch_track.xml"
     },
     {
-        "merged": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\build\\intermediates\\res\\merged\\debug\\layout_result_layout.xml.flat",
-        "source": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\src\\main\\res\\layout\\result_layout.xml"
-    },
-    {
         "merged": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\build\\intermediates\\res\\merged\\debug\\color_abc_hint_foreground_material_dark.xml.flat",
         "source": "C:\\Users\\q\\.gradle\\caches\\transforms-2\\files-2.1\\d8f6411b7c25cf4f044ff8a81a27f0e1\\res\\color\\abc_hint_foreground_material_dark.xml"
     },
@@ -1930,6 +1922,10 @@
     {
         "merged": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_abc_list_focused_holo.9.png.flat",
         "source": "C:\\Users\\q\\.gradle\\caches\\transforms-2\\files-2.1\\d8f6411b7c25cf4f044ff8a81a27f0e1\\res\\drawable-xhdpi-v4\\abc_list_focused_holo.9.png"
+    },
+    {
+        "merged": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\build\\intermediates\\res\\merged\\debug\\layout_tab3_result.xml.flat",
+        "source": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\src\\main\\res\\layout\\tab3_result.xml"
     },
     {
         "merged": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4_ic_arrow_down_24dp.png.flat",
@@ -2334,6 +2330,10 @@
     {
         "merged": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\build\\intermediates\\res\\merged\\debug\\layout-v14_md_stub_progress_indeterminate.xml.flat",
         "source": "C:\\Users\\q\\.gradle\\caches\\transforms-2\\files-2.1\\613d748d0f0e9d3ce6bece2b3292c768\\res\\layout-v14\\md_stub_progress_indeterminate.xml"
+    },
+    {
+        "merged": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\build\\intermediates\\res\\merged\\debug\\layout_tab3_layout.xml.flat",
+        "source": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\src\\main\\res\\layout\\tab3_layout.xml"
     },
     {
         "merged": "C:\\Users\\q\\AndroidStudioProjects\\madcamp_project2_v4\\app\\build\\intermediates\\res\\merged\\debug\\menu_menu_main.xml.flat",

@@ -65,6 +65,11 @@
             android:label="AddressEdit"
             android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
+
+        <activity
+            android:name=".Fragment2.ShowResult"
+            android:label="ShowResult">
+        </activity>
     </application>
 
 </manifest>

@@ -84,6 +84,10 @@
             android:label="AddressEdit"
             android:theme="@style/Theme.AppCompat.NoActionBar" >
         </activity>
+        <activity
+            android:name="com.example.serverapp.Fragment2.ShowResult"
+            android:label="ShowResult" >
+        </activity>
         <activity android:name="com.facebook.CustomTabMainActivity" />
         <!--
          The initialization ContentProvider will call FacebookSdk.sdkInitialize automatically

@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-70:12
-INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-70:12
-INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-70:12
-INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-70:12
+ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-75:12
+INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-75:12
+INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-75:12
+INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-75:12
 MERGED from [com.google.android.material:material:1.0.0] C:\Users\q\.gradle\caches\transforms-2\files-2.1\5b6753288c7ac79caade7ad2924a48bc\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.preference:preference:1.0.0] C:\Users\q\.gradle\caches\transforms-2\files-2.1\9738a47c88afe30b76c8674fcf17ea16\AndroidManifest.xml:17:1-22:12
 MERGED from [com.rengwuxian.materialedittext:library:2.1.4] C:\Users\q\.gradle\caches\transforms-2\files-2.1\8a334450e20aa44190cb80b283faf45c\AndroidManifest.xml:2:1-10:12
@@ -52,20 +52,20 @@ MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\q\.gradle\caches
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\q\.gradle\caches\transforms-2\files-2.1\5bacbb696318a58a3a4aa1bfac2c14ed\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\q\.gradle\caches\transforms-2\files-2.1\c8f68fc06a3f4417281f466296e15c7b\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\q\.gradle\caches\transforms-2\files-2.1\e7c9de3976e5586cc79c646202f45e32\AndroidManifest.xml:17:1-22:12
-INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-70:12
-INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-70:12
-INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-70:12
+INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-75:12
+INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-75:12
+INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-75:12
 	package
 		ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:3:5-36
 		INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml
 	android:versionName
 		INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-70:12
+		ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-75:12
 		INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml
 	android:versionCode
 		INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-70:12
+		ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:1-75:12
 		INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml
 	xmlns:android
 		ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:2:11-69
@@ -86,7 +86,7 @@ ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\And
 	android:name
 		ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:8:22-62
 application
-ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:10:5-68:19
+ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:10:5-73:19
 MERGED from [com.google.android.material:material:1.0.0] C:\Users\q\.gradle\caches\transforms-2\files-2.1\5b6753288c7ac79caade7ad2924a48bc\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.0.0] C:\Users\q\.gradle\caches\transforms-2\files-2.1\5b6753288c7ac79caade7ad2924a48bc\AndroidManifest.xml:22:5-20
 MERGED from [com.facebook.android:facebook-login:5.1.1] C:\Users\q\.gradle\caches\transforms-2\files-2.1\f693a524b7f48fdd167a472e2ce4b7ad\AndroidManifest.xml:28:5-29:19
@@ -231,6 +231,12 @@ ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\And
 		ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:66:13-63
 	android:name
 		ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:64:13-50
+activity#com.example.serverapp.Fragment2.ShowResult
+ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:69:9-72:20
+	android:label
+		ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:71:13-39
+	android:name
+		ADDED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml:70:13-49
 uses-sdk
 INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\q\AndroidStudioProjects\madcamp_project2_v4\app\src\main\AndroidManifest.xml
