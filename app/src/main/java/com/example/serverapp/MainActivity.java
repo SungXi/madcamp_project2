@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.add(R.id.fragment, new Fragment0());
+//        fragmentTransaction.add(R.id.fragment, new Fragment1());
         fragmentTransaction.commit();
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);

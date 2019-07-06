@@ -65,4 +65,8 @@ public interface IAppService {
                                    @Field("new_number") String new_number,
                                    @Field("new_email") String new_email,
                                    @Field("owner_email") String owner_email);
+
+    @POST("removePeople")
+    @FormUrlEncoded
+    Observable<String> removeAll (@Field("owner_email") String owner_email);
 }

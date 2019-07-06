@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -73,6 +74,7 @@ import retrofit2.Retrofit;
 
 public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
+    BitmapProcess bitmapProcess;
     IAppService apiService;
     private static final int SEND_PICTURE = 1;
     private String ownerEmail;
@@ -108,20 +110,22 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_1, container, false);
-        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh1);
-        swipeRefreshLayout.setOnRefreshListener(this);
+        View view = inflater.inflate(R.layout.test_layout, container, false);
+//        View view = inflater.inflate(R.layout.fragment_1, container, false);
+//        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh1);
+//        swipeRefreshLayout.setOnRefreshListener(this);
         Retrofit retrofitClient = RetrofitClient.getInstance();
         iAppService = retrofitClient.create(IAppService.class);
-        getAllShownImagesPath();
+//        getAllShownImagesPath();
 
-        initRetrofitClient();
-        imageView1 = view.findViewById(R.id.imageView);
-        imageView = view.findViewById(R.id.imageView);
-        gridView = view.findViewById(R.id.gridView);
+//        initRetrofitClient();
+        bitmapProcess = new BitmapProcess();
+        imageView1 = view.findViewById(R.id.testImage);
+//        imageView = view.findViewById(R.id.imageView);
+//        gridView = view.findViewById(R.id.gridView);
 
-        FloatingActionButton fab = view.findViewById(R.id.imageSyncFab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        Button button = view.findViewById(R.id.testButton);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent galleryIntent = new Intent();
@@ -131,25 +135,27 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
             }
         });
 
+//        FloatingActionButton fab = view.findViewById(R.id.imageSyncFab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent galleryIntent = new Intent();
+//                galleryIntent.setType("image/*");
+//                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+//                startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture to Upload"), SEND_PICTURE);
+//            }
+//        });
+
         return view;
     }
 
     private void initRetrofitClient() {
         OkHttpClient client = new OkHttpClient.Builder().build();
         apiService = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:3000")
+                .baseUrl("http://10.0.2.2:3000/")
                 .client(client)
                 .build()
                 .create(IAppService.class);
-    }
-
-    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(getContext())
-                .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
     }
 
     private void multipartImageUpload(Bitmap mBitmap) {
@@ -395,8 +401,8 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
                             ex.printStackTrace();
                         }
                         if (bitmap != null) {
-//                            uploadToServer(bitmap, selectedImageUri.getPath());
-                            multipartImageUpload(bitmap);
+                            uploadToServer(bitmap, selectedImageUri.getPath());
+//                            multipartImageUpload(bitmap);
                         }
                     }
                 }
@@ -406,36 +412,29 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
     }
 
     private void uploadToServer(Bitmap imageBitmap, String path) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        String encodedString = Base64.encodeToString(byteArray, Base64.DEFAULT);
-//        String encodedString = byteArray.toString();
+        String encodedString = bitmapProcess.getStringFromBitmap(imageBitmap);
         Log.e("Test", encodedString);
 
-        byte[] decodedString = Base64.decode(localData.get(0), Base64.DEFAULT);
-//            byte[] decodedString = localData.get(0).getBytes();
-        Log.e("Test", decodedString.toString());
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        Bitmap decodedByte = bitmapProcess.getBitmapFromString(encodedString);
+        decodedByte = Bitmap.createScaledBitmap(decodedByte, 120, 120, false);
         imageView1.setImageBitmap(decodedByte);
 
-        ownerEmail = ((MainActivity) getActivity()).getOwnerEmail();
-        if (ownerEmail != null) {
-            compositeDisposable.add(iAppService.uploadImage(ownerEmail, path, encodedString)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<String>() {
-                        @Override
-                        public void accept(String response) throws Exception {
-                            Toast.makeText(getContext(), response.replace("\"", ""), Toast.LENGTH_LONG)
-                                    .show();
-                        }
-                    }));
-        } else {
-            Toast.makeText(getContext(), "사진 저장 실패!", Toast.LENGTH_LONG)
-                    .show();
-        }
-
+//        ownerEmail = ((MainActivity) getActivity()).getOwnerEmail();
+//        if (ownerEmail != null) {
+//            compositeDisposable.add(iAppService.uploadImage(ownerEmail, path, encodedString)
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(new Consumer<String>() {
+//                        @Override
+//                        public void accept(String response) throws Exception {
+//                            Toast.makeText(getContext(), response.replace("\"", ""), Toast.LENGTH_LONG)
+//                                    .show();
+//                        }
+//                    }));
+//        } else {
+//            Toast.makeText(getContext(), "사진 저장 실패!", Toast.LENGTH_LONG)
+//                    .show();
+//        }
     }
 
     private void getAllShownImagesPath() {
@@ -448,6 +447,7 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
                     .subscribe(new Consumer<String>() {
                         @Override
                         public void accept(String data) throws Exception {
+                            Log.e("Image Fetch", data);
                             parseJson(data);
                         }
                     }));
@@ -455,7 +455,7 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
     }
 
     private void parseJson(String data) {
-        String jsonString = "{\"images\":" + data + "}";
+        String jsonString = "{\"images\": " + data + " }";
         JsonParser jsonParser = new JsonParser();
         JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
         JsonArray memberArray = (JsonArray) jsonObject.get("images");
@@ -469,10 +469,7 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
 
         Log.e("Test", localData.size() + "");
         if (localData.size() > 0) {
-            byte[] decodedString = Base64.decode(localData.get(0), Base64.DEFAULT);
-//            byte[] decodedString = localData.get(0).getBytes();
-            Log.e("Test", decodedString.toString());
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            Bitmap decodedByte = bitmapProcess.getBitmapFromString(localData.get(0));
             imageView1.setImageBitmap(decodedByte);
         }
 

@@ -10,7 +10,7 @@ public class RetrofitClient {
     public static Retrofit getInstance() {
         if (instance == null) {
             instance = new Retrofit.Builder()
-                    .baseUrl("http://10.0.2.2:3000/") // In emulator, localhost will changed to 10.0.2.2
+                    .baseUrl("http://143.248.36.156:3000/") // In emulator, localhost will changed to 10.0.2.2
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();

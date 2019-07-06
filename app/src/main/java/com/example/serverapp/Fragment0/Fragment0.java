@@ -2,18 +2,22 @@ package com.example.serverapp.Fragment0;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Canvas;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +38,7 @@ import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.exceptions.OnErrorNotImplementedException;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
@@ -44,7 +49,6 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
     private int profileIndex = 0;
     private final int EDIT_CONTACT = 1;
     private final int ADD_CONTACT = 2;
-    private boolean use_local = true;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private ContactAdapter mAdapter;
@@ -52,6 +56,9 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
     private ArrayList<AddressItem> addressList = new ArrayList<>();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private IAppService iAppService;
+    private Animation fab_open, fab_close;
+    private Boolean isFabOpen = false;
+    private FloatingActionButton fab, fab1, fab2;
     public Integer[] images = new Integer[] {
             R.drawable.adam, R.drawable.anjali,
             R.drawable.arjun, R.drawable.jorge,
@@ -75,7 +82,7 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
                     .subscribe(new Consumer<String>() {
                         @Override
                         public void accept(String data) throws Exception {
-                            // Empty Handler
+                            Log.e("DELETE", data.replace("\"", ""));
                         }
                     }));
         }
@@ -140,30 +147,56 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
         mAdapter.setItemClick(new ContactAdapter.ItemClick() {
             @Override
             public void onClick(View view, int position) {
-                Intent detail_intent = new Intent(getActivity(), AddressEdit.class);
-                detail_intent.putExtra("position", position);
-                detail_intent.putExtra("name", addressList.get(position).getName());
-                detail_intent.putExtra("number", addressList.get(position).getNumber());
-                detail_intent.putExtra("email", addressList.get(position).getEmail());
-                detail_intent.putExtra("owner_email", ownerEmail);
-                startActivityForResult(detail_intent, EDIT_CONTACT);
+                Intent dial_intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + addressList.get(position).getNumber()));
+                startActivity(dial_intent);
             }
         });
         recyclerView.setAdapter(mAdapter);
 
-        FloatingActionButton fab = view.findViewById(R.id.contactFab);
+        fab_open = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
+        fab = view.findViewById(R.id.contactFab);
+        fab1 = view.findViewById(R.id.contactFab1);
+        fab2 = view.findViewById(R.id.contactFab2);
         fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int id = view.getId();
+                switch (id) {
+                    case R.id.contactFab:
+                        anim();
+                        break;
+                    case R.id.contactFab1:
+                        anim();
+                        break;
+                    case R.id.contactFab2:
+                        anim();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+        fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent detail_intent = new Intent(getActivity(), AddressEdit.class);
                 detail_intent.putExtra("position", -1);
                 detail_intent.putExtra("name", "name");
-                detail_intent.putExtra("number", "010-0000-0000");
+                detail_intent.putExtra("number", "01012345678");
                 detail_intent.putExtra("email", "test@test.com");
                 detail_intent.putExtra("owner_email", ownerEmail);
                 detail_intent.putExtra("imageID", images[profileIndex]);
                 increaseProfileIndex();
                 startActivityForResult(detail_intent, ADD_CONTACT);
+            }
+        });
+
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                syncList();
             }
         });
 
@@ -174,13 +207,18 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
                     @Override
                     public void accept(String data) throws Exception {
                         if (data != null) {
-                            String jsonString = "{\"images\":" + data + "}";
+                            String jsonString = "{\"data\": " + data + " }";
                             JsonParser jsonParser = new JsonParser();
                             addressList.clear();
                             mAdapter.notifyDataSetChanged();
                             JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
-                            JsonArray memberArray = (JsonArray) jsonObject.get("images");
+                            JsonArray memberArray = (JsonArray) jsonObject.get("data");
                             Log.e("Refresh", jsonString);
+                            try {
+                                JsonObject testObject = (JsonObject) memberArray.get(0);
+                            } catch (OnErrorNotImplementedException ex) {
+                                memberArray = (JsonArray) memberArray.get(0);
+                            }
 
                             for (int i = 0; i < memberArray.size(); i++) {
                                 JsonObject tempObject = (JsonObject) memberArray.get(i);
@@ -198,6 +236,72 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
 
         mAdapter.notifyDataSetChanged();
         return view;
+    }
+
+    public void syncList() {
+        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        String[] projection = new String[] {
+                ContactsContract.CommonDataKinds.Phone.NUMBER,
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Email.ADDRESS,
+                ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY
+        };
+        String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
+        Cursor contactCursor = getActivity().getContentResolver().query(uri, projection, null, null, sortOrder);
+
+        if (contactCursor.moveToFirst()) {
+            compositeDisposable.add(iAppService.removeAll(((MainActivity) getActivity()).getOwnerEmail())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<String>() {
+                        @Override
+                        public void accept(String data) throws Exception {
+                            Log.e("REMOVE_ALL", data.replace("\"", ""));
+                        }
+                    }));
+            do {
+                addressList.clear();
+                mAdapter.notifyDataSetChanged();
+                String[] data = new String[3];
+                data[0] = contactCursor.getString(1); // Name
+                data[1] = contactCursor.getString(0).replace("-", "").replace("?","");
+                if (data[1].startsWith("//")) {
+                    data[1] = data[1].substring(2);
+                } else if (data[1].startsWith("+82")) {
+                    data[1] = "0" + data[1].substring(3);
+                } // Number
+                data[2] = contactCursor.getString(2); // Address
+                AddressItem new_item = new AddressItem(data[0], data[1], data[2], images[profileIndex]);
+                increaseProfileIndex();
+                addressList.add(new_item);
+                mAdapter.notifyItemInserted(mAdapter.getData().size() - 1);
+                compositeDisposable.add(iAppService.addPerson(new_item.getName(), new_item.getNumber(), new_item.getEmail(), ((MainActivity) getActivity()).getOwnerEmail())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<String>() {
+                            @Override
+                            public void accept(String data) throws Exception {
+                                Log.e("ADD", data.replace("\"", ""));
+                            }
+                        }));
+            } while (contactCursor.moveToNext());
+        }
+    }
+
+    public void anim() {
+        if (isFabOpen) {
+            fab1.startAnimation(fab_close);
+            fab2.startAnimation(fab_close);
+            fab1.setClickable(false);
+            fab2.setClickable(false);
+            isFabOpen = false;
+        } else {
+            fab1.startAnimation(fab_open);
+            fab2.startAnimation(fab_open);
+            fab1.setClickable(true);
+            fab2.setClickable(true);
+            isFabOpen = true;
+        }
     }
 
     @Override
@@ -218,7 +322,6 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
                         increaseProfileIndex();
                         AddressItem original_item = addressList.get(position);
                         addressList.set(position, edit_item);
-                        Log.e("After edit", mAdapter.getItemCount() + ":" + mAdapter.getData().get(position).getName());
                         mAdapter.notifyItemChanged(position);
                         compositeDisposable.add(iAppService.editPerson(original_item.getName(), original_item.getNumber(), original_item.getEmail(),
                                 edit_item.getName(), edit_item.getNumber(), edit_item.getEmail(),
@@ -228,7 +331,7 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
                                 .subscribe(new Consumer<String>() {
                                     @Override
                                     public void accept(String data) throws Exception {
-                                        // Empty Handler
+                                        Log.e("EDIT", data.replace("\"", ""));
                                     }
                                 }));
                     }
@@ -245,7 +348,6 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
                             images[profileIndex]);
                     increaseProfileIndex();
                     addressList.add(new_item);
-                    Log.e("After add", mAdapter.getItemCount() + ":" + mAdapter.getData().get(mAdapter.getData().size() - 1).getName());
                     mAdapter.notifyItemInserted(mAdapter.getData().size() - 1);
                     mAdapter.notifyDataSetChanged();
                     compositeDisposable.add(iAppService.addPerson(new_item.getName(), new_item.getNumber(), new_item.getEmail(), ((MainActivity) getActivity()).getOwnerEmail())
@@ -254,7 +356,7 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
                             .subscribe(new Consumer<String>() {
                                 @Override
                                 public void accept(String data) throws Exception {
-                                    // Empty Handler
+                                    Log.e("ADD", data.replace("\"", ""));
                                 }
                             }));
                 }
@@ -276,12 +378,17 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
                             @Override
                             public void accept(String data) throws Exception {
                                 if (data != null) {
-                                    String jsonString = "{\"images\":" + data + "}";
+                                    String jsonString = "{\"images\": " + data + " }";
                                     JsonParser jsonParser = new JsonParser();
                                     addressList.clear();
                                     mAdapter.notifyDataSetChanged();
                                     JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
                                     JsonArray memberArray = (JsonArray) jsonObject.get("images");
+                                    try {
+                                        JsonObject testObject = (JsonObject) memberArray.get(0);
+                                    } catch (OnErrorNotImplementedException ex) {
+                                        memberArray = (JsonArray) memberArray.get(0);
+                                    }
 
                                     for (int i = 0; i < memberArray.size(); i++) {
                                         JsonObject tempObject = (JsonObject) memberArray.get(i);

@@ -74,9 +74,8 @@ public class GalleryAdapter extends BaseAdapter {
 //                .placeholder(R.mipmap.ic_launcher).centerCrop()
 //                .into(picturesView);
 
-        byte[] decodedString = Base64.decode(images.get(position), Base64.DEFAULT);
-//        byte[] decodedString = images.get(0).getBytes();
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        BitmapProcess bitmapProcess = new BitmapProcess();
+        Bitmap decodedByte = bitmapProcess.getBitmapFromString(images.get(position));
         picturesView.setImageBitmap(decodedByte);
 
         return picturesView;
