@@ -38,6 +38,39 @@ public class MainActivity extends AppCompatActivity {
             case LOGIN_SEND:
                 if (resultCode == RESULT_OK && data != null && ownerEmail == null) {
                     ownerEmail = data.getStringExtra("owner_email");
+                    setContentView(R.layout.activity_main);
+                    Toolbar toolbar = findViewById(R.id.toolbar);
+                    setSupportActionBar(toolbar);
+
+                    ActivityCompat.requestPermissions(this, new String[]{
+                            Manifest.permission.READ_CONTACTS,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.CAMERA
+                    }, 0);
+
+                    FragmentManager fm = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                    fragmentTransaction.add(R.id.fragment, new Fragment0());
+                    fragmentTransaction.commit();
+
+                    TabLayout tabLayout = findViewById(R.id.tabLayout);
+                    tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                        @Override
+                        public void onTabSelected(TabLayout.Tab tab) {
+                            int pos = tab.getPosition();
+                            changeView(pos);
+                        }
+
+                        @Override
+                        public void onTabUnselected(TabLayout.Tab tab) {
+
+                        }
+
+                        @Override
+                        public void onTabReselected(TabLayout.Tab tab) {
+
+                        }
+                    });
                 } else {
                     finish();
                 }
@@ -46,39 +79,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ActivityCompat.requestPermissions(this, new String[]{
-                Manifest.permission.READ_CONTACTS,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA
-        }, 0);
-
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.fragment, new Fragment0());
-        fragmentTransaction.commit();
-
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int pos = tab.getPosition();
-                changeView(pos);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
     }
 
     @Override
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new Fragment0();
                 FragmentManager fm = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.add(R.id.fragment, fragment);
+                fragmentTransaction.replace(R.id.fragment, fragment);
                 fragmentTransaction.commit();
                 break;
             case 1 :

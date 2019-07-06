@@ -1,9 +1,6 @@
 package com.example.serverapp.Fragment1;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,6 +10,7 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.serverapp.R;
 
 import java.util.ArrayList;
 
@@ -62,21 +60,17 @@ public class GalleryAdapter extends BaseAdapter {
             picturesView = (ImageView) convertView;
         }
 
-//        reqOpt = RequestOptions
-//                .fitCenterTransform()
-//                .transform(new RoundedCorners(5))
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .override(picturesView.getWidth(), picturesView.getHeight());
+        reqOpt = RequestOptions
+                .fitCenterTransform()
+                .transform(new RoundedCorners(5))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .override(picturesView.getWidth(), picturesView.getHeight());
 
-//        glide.load(images.get(position))
-//                .thumbnail(0.25f)
-//                .apply(reqOpt)
-//                .placeholder(R.mipmap.ic_launcher).centerCrop()
-//                .into(picturesView);
-
-        BitmapProcess bitmapProcess = new BitmapProcess();
-        Bitmap decodedByte = bitmapProcess.getBitmapFromString(images.get(position));
-        picturesView.setImageBitmap(decodedByte);
+        glide.load(images.get(position))
+                .thumbnail(0.25f)
+                .apply(reqOpt)
+                .placeholder(R.mipmap.ic_launcher).centerCrop()
+                .into(picturesView);
 
         return picturesView;
     }

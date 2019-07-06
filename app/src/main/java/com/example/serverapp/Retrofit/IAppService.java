@@ -23,15 +23,20 @@ public interface IAppService {
     Observable<String> loginUser (@Field("email") String email,
                                   @Field("password") String password);
 
-    @POST("fetch_images")
+    @POST("fetch_images_request")
     @FormUrlEncoded
-    Observable<String> fetchImages (@Field("email") String email);
+    Observable<String> fetchImages (@Field("owner_email") String email);
 
     @Multipart
     @POST("upload_image_request")
     Call<ResponseBody> postImage(@Part MultipartBody.Part image,
                                  @Part("upload") RequestBody name,
                                  @Part("owner_email") RequestBody owner_email);
+
+    @POST("delete_image_request")
+    @FormUrlEncoded
+    Observable<String> deleteImage(@Field("path") String path,
+                                   @Field("owner_email") String owner_email);
 
     @POST("upload_image")
     @FormUrlEncoded
