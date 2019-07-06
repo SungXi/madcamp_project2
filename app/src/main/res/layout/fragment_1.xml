@@ -40,19 +40,7 @@
                 </com.example.serverapp.Fragment1.ExpandableGridView>
             </RelativeLayout>
         </ScrollView>
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </ImageView>
-
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <ImageView
-        android:id="@+id/imageViewTest"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/imageSyncFab2"

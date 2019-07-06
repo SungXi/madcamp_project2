@@ -1,21 +1,12 @@
 package com.example.serverapp.Fragment1;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,19 +15,16 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.ceylonlabs.imageviewpopup.ImagePopup;
+import com.bumptech.glide.request.FutureTarget;
 import com.example.serverapp.MainActivity;
 import com.example.serverapp.R;
 import com.example.serverapp.Retrofit.IAppService;
@@ -46,7 +34,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -55,10 +42,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.nio.file.Files;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -79,19 +63,18 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
 
     BitmapProcess bitmapProcess;
     IAppService apiService;
+    private final String SERVER = "http://143.248.36.156:3000";
     private static final int SEND_PICTURE = 1;
     private String ownerEmail;
     private GalleryAdapter gallery;
-    private ImageView imageView;
-    private ImageView imageViewTest;
     private ExpandableGridView gridView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Animation fab_open, fab_close;
     private Boolean isFabOpen = false;
     private FloatingActionButton fab, fab1, fab2;
-    private String currentPhotoPath;
     private int pos = -1;
     private RequestManager mGlideRequestManager;
+    private FutureTarget<Bitmap> futureTarget;
     private ArrayList<String> localData = new ArrayList<>();
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -125,8 +108,6 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
 
         initRetrofitClient();
         bitmapProcess = new BitmapProcess();
-        imageViewTest = view.findViewById(R.id.imageViewTest);
-        imageView = view.findViewById(R.id.imageView);
         gridView = view.findViewById(R.id.gridView);
 
         fab_open = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
@@ -139,13 +120,13 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
             public void onClick(View view) {
                 int id = view.getId();
                 switch (id) {
-                    case R.id.contactFab:
+                    case R.id.imageSyncFab:
                         anim();
                         break;
-                    case R.id.contactFab1:
+                    case R.id.imageSyncFab1:
                         anim();
                         break;
-                    case R.id.contactFab2:
+                    case R.id.imageSyncFab2:
                         anim();
                         break;
                     default:
@@ -168,9 +149,8 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
             @Override
             public void onClick(View view) {
                 Intent galleryIntent = new Intent();
-                galleryIntent.setType("image/*");
                 galleryIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(Intent.createChooser(galleryIntent, "Take Picture to Upload"), SEND_PICTURE);
+                startActivityForResult(galleryIntent, SEND_PICTURE);
             }
         });
 
@@ -196,7 +176,7 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
     private void initRetrofitClient() {
         OkHttpClient client = new OkHttpClient.Builder().build();
         apiService = new Retrofit.Builder()
-                .baseUrl("http://143.248.36.156:3000/")
+                .baseUrl(SERVER + "/")
                 .client(client)
                 .build()
                 .create(IAppService.class);
@@ -257,6 +237,9 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
         PopupMenu popup = new PopupMenu(getContext(), v);
         this.pos = i;
         try {
+            futureTarget = mGlideRequestManager.asBitmap()
+                    .load(gallery.getImages().get(i))
+                    .submit();
             Field[] fields = popup.getClass().getDeclaredFields();
             for (Field field : fields) {
                 if ("mPopup".equals(field.getName())) {
@@ -300,125 +283,61 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
                     this.pos = -1;
                 }
                 return true;
-//            case R.id.duplicate:
-//                if (this.pos >= 0) {
-//                    File imgFile = new File(gallery.getImages().get(this.pos));
-//                    if (imgFile.exists()) {
-//                        Uri photoUri = Uri.fromFile(imgFile);
-//                        if (null != photoUri) {
-//                            duplicateImage(photoUri);
-//                        }
-//                    }
-//                    this.pos = -1;
-//                }
-//                return true;
-//            case R.id.send:
-//                if (this.pos >= 0) {
-//                    File imgFile = new File(gallery.getImages().get(this.pos));
-//                    if (imgFile.exists()) {
-//                        Intent intent = new Intent(Intent.ACTION_SEND);
-//                        intent.setType("image/*");
-//                        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-//                        intent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(getContext(),
-//                                "com.example.serverapp.fileprovider",
-//                                imgFile));
-//                        Intent chooser = Intent.createChooser(intent, getContext().getString(R.string.share));
-//                        if (null != intent.resolveActivity(getContext().getPackageManager())) {
-//                            startActivity(chooser);
-//                        } else {
-//                            Snackbar.make(getView(), "Sending failed.", Snackbar.LENGTH_LONG)
-//                                    .setAction("Action", null).show();
-//                        }
-//                    }
-//                    this.pos = -1;
-//                }
-//                return true;
+            case R.id.duplicate:
+                if (this.pos >= 0) {
+                    Bitmap tempBitmap = null;
+                    try {
+                        tempBitmap = futureTarget.get();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+
+                    if (tempBitmap != null) {
+                        multipartImageUpload(tempBitmap);
+                        mGlideRequestManager.clear(futureTarget);
+                    }
+                    this.pos = -1;
+                }
+                return true;
+            case R.id.send:
+                if (this.pos >= 0) {
+                    Bitmap tempBitmap = null;
+                    try {
+                        tempBitmap = futureTarget.get();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+
+                    if (tempBitmap != null) {
+                        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                        tempBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                        String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), tempBitmap, "Title", null);
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("image/*");
+                        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(path));
+                        Intent chooser = Intent.createChooser(intent, getContext().getString(R.string.share));
+                        if (null != intent.resolveActivity(getContext().getPackageManager())) {
+                            startActivity(chooser);
+                        } else {
+                            Snackbar.make(getView(), "Sending failed.", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                        mGlideRequestManager.clear(futureTarget);
+                    }
+                    this.pos = -1;
+                }
+                return true;
             default:
                 this.pos = -1;
                 return true;
         }
     }
 
-    private void duplicateImage(Uri photoUri) {
-        File image = null;
-        Uri savingUri;
-        try {
-            image = createImageFile();
-        } catch (IOException ex) {
-            Snackbar.make(getView(), "Crop failed.", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        }
-
-        if (null != image && image.exists()) {
-            savingUri = Uri.fromFile(image);
-            if (null != savingUri) {
-                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                if (null != photoUri && Build.VERSION.SDK_INT >= 26) {
-                    File tempFile = new File(photoUri.getPath());
-                    File dscFile = new File(currentPhotoPath);
-                    try {
-                        FileOutputStream fileOutputStream = new FileOutputStream(dscFile, false);
-                        fileOutputStream.write(Files.readAllBytes(tempFile.toPath()));
-                        fileOutputStream.close();
-                    } catch (Exception ex) {
-                        Snackbar.make(getView(), "Saving failed.", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                    intent.setData(Uri.fromFile(dscFile));
-                    getActivity().sendBroadcast(intent);
-                    Snackbar.make(getView(), "Saved successfully.", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                } else {
-                    Snackbar.make(getView(), "Saving failed.", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            }
-        }
-    }
-
-    private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp;
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera";
-        File storageDir = new File(path);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case CropImage
-                    .CROP_IMAGE_ACTIVITY_REQUEST_CODE:
-                CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri contentUri = result.getUri();
-                if (null != contentUri && Build.VERSION.SDK_INT >= 26) {
-                    File tempFile = new File(contentUri.getPath());
-                    File dscFile = new File(currentPhotoPath);
-                    try {
-                        FileOutputStream fileOutputStream = new FileOutputStream(dscFile, false);
-                        fileOutputStream.write(Files.readAllBytes(tempFile.toPath()));
-                        fileOutputStream.close();
-                    } catch (Exception ex) {
-                        Snackbar.make(getView(), "Saving failed.", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                    intent.setData(Uri.fromFile(dscFile));
-                    getActivity().sendBroadcast(intent);
-                    Snackbar.make(getView(), "Saved successfully.", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                } else {
-                    Snackbar.make(getView(), "Saving failed.", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-                break;
             case SEND_PICTURE:
                 if (resultCode == Activity.RESULT_OK) {
                     Uri selectedImageUri = data.getData();
@@ -470,7 +389,7 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
         for (int i = 0; i < memberArray.size() ; i++) {
             JsonObject tempObject = (JsonObject) memberArray.get(i);
             String tempString = tempObject.get("path").toString();
-            localData.add("http://143.248.36.156:3000" + tempString.substring(1, tempString.length() - 1));
+            localData.add(SERVER + tempString.substring(1, tempString.length() - 1));
             Log.e("Json Parser", localData.get(i));
         }
 
@@ -481,18 +400,8 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (null != gallery.getImages() && !gallery.getImages().isEmpty()) {
-                    mGlideRequestManager.load(gallery.getImages().get(i))
-                            .placeholder(R.mipmap.ic_launcher).centerCrop()
-                            .into(imageView);
-                    final ImagePopup imagePopup = new ImagePopup(getContext());
-                    imagePopup.setBackgroundColor(Color.argb(128,0,0,0));
-                    imagePopup.setFullScreen(true);
-                    imagePopup.setHideCloseIcon(true);
-                    imagePopup.setImageOnClickClose(true);
-                    imagePopup.initiatePopup(imageView.getDrawable());
-                    imagePopup.viewPopup();
-                }
+                Snackbar.make(view, gallery.getImages().get(i), Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 
@@ -503,15 +412,6 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
                     showPopup(view, i);
                 }
                 return true;
-            }
-        });
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (null != gallery.getImages() && !gallery.getImages().isEmpty()) {
-                    showPopup(view, i);
-                }
             }
         });
     }

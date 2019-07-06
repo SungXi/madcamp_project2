@@ -33,8 +33,6 @@ public class GalleryAdapter extends BaseAdapter {
         return images;
     }
 
-    public RequestManager getGlide() { return glide; }
-
     public int getCount() {
         return images.size();
     }
