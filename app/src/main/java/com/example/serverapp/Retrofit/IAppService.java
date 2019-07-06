@@ -28,9 +28,10 @@ public interface IAppService {
     Observable<String> fetchImages (@Field("email") String email);
 
     @Multipart
-    @POST("/upload_image")
+    @POST("upload_image_request")
     Call<ResponseBody> postImage(@Part MultipartBody.Part image,
-                                 @Part("upload") RequestBody name);
+                                 @Part("upload") RequestBody name,
+                                 @Part("owner_email") RequestBody owner_email);
 
     @POST("upload_image")
     @FormUrlEncoded

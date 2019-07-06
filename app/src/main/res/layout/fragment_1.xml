@@ -49,14 +49,19 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <ImageView
+        android:id="@+id/imageViewTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/imageSyncFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:src="@android:drawable/ic_popup_sync"
+        android:src="@drawable/ic_upload"
         app:backgroundTint="@color/colorPrimary"
         app:layout_anchor="@+id/swipeRefresh1"
-        app:layout_anchorGravity="start|bottom" />
+        app:layout_anchorGravity="bottom|end" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
