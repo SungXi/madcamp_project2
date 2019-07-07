@@ -3,27 +3,23 @@ package com.example.serverapp.Fragment2;
 import android.graphics.Bitmap;
 
 public class ImageItem {
-    private Bitmap image;
+    private String url;
     private String image_name;
-    private float[] feature;
-    private float[] feature2;
 
-    public ImageItem(Bitmap image, String image_name, float[] feature, float[] feature2) {
-        this.image = image;
+    public ImageItem(String url, String image_name) {
+        this.url = url;
         this.image_name = image_name;
-        this.feature = feature;
-        this.feature2 = feature2;
     }
 
-    public Bitmap getImage() {
-        return image;
+    public String getUrl() {
+        return url;
     }
 
-    public void setImage(Bitmap image) {
-        this.image = image;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getNmae() {
+    public String getName() {
         return image_name;
     }
 
@@ -31,11 +27,4 @@ public class ImageItem {
         this.image_name = image_name;
     }
 
-    public  float[] getFeature() { return feature; }
-
-    public void setFeature(float[] feature) { this.feature = feature; }
-
-    public  float[] getFeature2() { return feature2; }
-
-    public void setFeature2(float[] feature) { this.feature2 = feature; }
 }

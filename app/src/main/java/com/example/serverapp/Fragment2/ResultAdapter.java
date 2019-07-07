@@ -7,15 +7,18 @@ import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.RequestManager;
 import com.example.serverapp.R;
 
 import java.util.ArrayList;
 
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.CustomViewHolder> {
     private ArrayList<ImageItem> imageList;
+    private RequestManager mGlideRequestManager;
 
-    public ResultAdapter(ArrayList<ImageItem> list) {
+    public ResultAdapter(ArrayList<ImageItem> list, RequestManager manager) {
         imageList = list;
+        mGlideRequestManager = manager;
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -26,6 +29,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.CustomView
         }
     }
 
+    public ArrayList<ImageItem> getImage() {
+        return imageList;
+    }
 
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -36,7 +42,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.CustomView
 
     @Override
     public void onBindViewHolder(CustomViewHolder viewHolder, final int position) {
-        viewHolder.result_image.setImageBitmap(imageList.get(position).getImage());
+        mGlideRequestManager.load(imageList.get(position).getUrl())
+                .placeholder(R.mipmap.ic_launcher)
+                .into(viewHolder.result_image);
     }
 
     @Override

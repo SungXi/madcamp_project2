@@ -69,4 +69,16 @@ public interface IAppService {
     @POST("removePeople")
     @FormUrlEncoded
     Observable<String> removeAll (@Field("owner_email") String owner_email);
+
+    @POST("findImage")
+    @FormUrlEncoded
+    Observable<String> addHist (@Field("feature1") String feature1,
+                                @Field("feature2") String feature2);
+
+    @Multipart
+    @POST("addDB")
+    Call<ResponseBody> addDB(@Part MultipartBody.Part image,
+                             @Part("DB") RequestBody name,
+                             @Part("feature1") RequestBody feature1,
+                             @Part("feature2") RequestBody feature2);
 }

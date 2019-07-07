@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,16 +10,40 @@
     tools:context=".MainActivity" >
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/imageSyncFab2"
+        android:id="@+id/tab3Fab2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="160dp"
+        android:layout_marginRight="15sp"
+        android:src="@drawable/ic_add"
+        android:visibility="invisible"
+        app:backgroundTint="#9500ff"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/tab3Fab1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="90dp"
+        android:layout_marginRight="15sp"
+        android:src="@drawable/ic_compare"
+        android:visibility="invisible"
+        app:backgroundTint="#9500ff"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/tab3Fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15sp"
         android:src="@drawable/ic_upload"
         app:backgroundTint="@color/colorPrimary"
-        app:layout_anchor="@+id/swipeRefresh1"
-        app:layout_anchorGravity="bottom|end"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_gravity="bottom|end"
+        app:layout_anchorGravity="bottom|end" />
 
     <ImageView
         android:id="@+id/original_image"
@@ -48,4 +72,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/original_image" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
