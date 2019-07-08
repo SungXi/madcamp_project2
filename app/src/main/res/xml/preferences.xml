@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:key="pref_sync"
+        android:title="Sync"
+        android:icon="@android:drawable/ic_menu_upload"
+        android:summary="Enable data synchronization."
+        android:defaultValue="true">
+    </CheckBoxPreference>
+
+    <SwitchPreference
+        android:key="notification"
+        android:title="Notification"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:summary="Enable message notifications.">
+    </SwitchPreference>
+
+    <ListPreference
+        android:key="pref_sync_connection"
+        android:title="Connection Type"
+        android:icon="@android:drawable/ic_menu_send"
+        android:entries="@array/pref_sync_connection_entries"
+        android:entryValues="@array/pref_sync_connection_values"
+        android:defaultValue="@string/pref_sync_connection_default"
+        android:dependency="pref_sync"
+        android:summary="Change the type of connection.">
+    </ListPreference>
+
+</PreferenceScreen>
