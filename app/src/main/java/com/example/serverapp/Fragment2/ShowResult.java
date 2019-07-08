@@ -110,18 +110,14 @@ public class ShowResult extends AppCompatActivity {
         JsonParser jsonParser = new JsonParser();
         JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
         JsonArray memberArray = (JsonArray) jsonObject.get("images");
-        try {
-            JsonObject testObject = (JsonObject) memberArray.get(0);
-        } catch (OnErrorNotImplementedException ex) {
-            memberArray = (JsonArray) memberArray.get(0);
-        }
+        Log.e("Find Image", memberArray.toString());
 
         for (int i = 0; i < memberArray.size() ; i++) {
-            JsonObject tempObject = (JsonObject) memberArray.get(i);
-            String tempString = tempObject.toString();
+            String tempString = memberArray.get(i).toString().replace("\"", "");
             ImageItem new_item = new ImageItem(SERVER + tempString, i + "");
             mResultAdaptor.getImage().add(new_item);
-            Log.e("Json Parser", tempString);
+            mResultAdaptor.notifyItemInserted(mResultAdaptor.getItemCount() - 1);
+            Log.e("Json Parser", SERVER + tempString);
         }
     }
 

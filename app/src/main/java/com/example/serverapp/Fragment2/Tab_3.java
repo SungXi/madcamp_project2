@@ -191,9 +191,6 @@ public class Tab_3 extends Fragment {
             if (resultCode == Activity.RESULT_OK) {
                 try {
                     Uri fileUri = data.getData();
-                    String[] tempString = fileUri.getPath().split("/");
-                    String fileName = tempString[tempString.length - 1];
-                    Log.e("UploadDB", fileName);
                     InputStream in = getActivity().getContentResolver().openInputStream(fileUri);
                     Bitmap img = BitmapFactory.decodeStream(in);
                     in.close();
@@ -218,7 +215,7 @@ public class Tab_3 extends Fragment {
                     HistogramGenerator histogramGenerator = new HistogramGenerator();
                     float[] featureVector = histogramGenerator.getHueDistribution(img);
                     float[] featureVector2 = histogramGenerator.getSatDistribution(img);
-                    multipartImageUpload(img, featureVector, featureVector2, fileName);
+                    multipartImageUpload(img, featureVector, featureVector2);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -226,7 +223,7 @@ public class Tab_3 extends Fragment {
         }
     }
 
-    private void multipartImageUpload(Bitmap mBitmap, float[] featureVector1, float[] featureVector2, String fileName) {
+    private void multipartImageUpload(Bitmap mBitmap, float[] featureVector1, float[] featureVector2) {
         try {
             File filesDir = getContext().getFilesDir();
             File file = new File(filesDir, "image" + ".png");
@@ -241,7 +238,7 @@ public class Tab_3 extends Fragment {
             fos.close();
 
             RequestBody reqFile = RequestBody.create(file, MediaType.parse("image/*"));
-            MultipartBody.Part body = MultipartBody.Part.createFormData("DB", fileName, reqFile);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("upload", file.getName(), reqFile);
             RequestBody name = RequestBody.create("upload", MediaType.parse("text/plain"));
             RequestBody feature1 = RequestBody.create(Arrays.toString(featureVector1), MediaType.parse("text/plain"));
             RequestBody feature2 = RequestBody.create(Arrays.toString(featureVector2), MediaType.parse("text/plain"));

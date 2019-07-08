@@ -79,7 +79,12 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
 
+    @Override
+    public void onBackPressed() {
+        LoginManager.getInstance().logOut();
+        recreate();
     }
 
     @Override

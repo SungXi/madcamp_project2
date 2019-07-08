@@ -206,14 +206,14 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String data) throws Exception {
-                        if (data != null) {
+                        if (!data.isEmpty()) {
                             String jsonString = "{\"data\": " + data + " }";
                             JsonParser jsonParser = new JsonParser();
                             addressList.clear();
                             mAdapter.notifyDataSetChanged();
+                            Log.e("Refresh", jsonString);
                             JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
                             JsonArray memberArray = (JsonArray) jsonObject.get("data");
-                            Log.e("Refresh", jsonString);
                             try {
                                 JsonObject testObject = (JsonObject) memberArray.get(0);
                             } catch (OnErrorNotImplementedException ex) {

@@ -64,10 +64,6 @@ public class HistogramGenerator {
             length = length + distOut[i];
         }
 
-        for (int i = 0; i < 256; ++i){
-            distOut[i] = distOut[i] / length;
-        }
-
         System.out.println("histogram is " + distOut);
         System.out.println(Arrays.toString(distOut));
 
@@ -104,10 +100,6 @@ public class HistogramGenerator {
 
         for (int i = 0; i < step; ++i) {
             length = length + histogram[i];
-        }
-
-        for (int i = 0; i < step; ++i){
-            histogram[i] = histogram[i] / length;
         }
 
         System.out.println("This is Hue Histogram");

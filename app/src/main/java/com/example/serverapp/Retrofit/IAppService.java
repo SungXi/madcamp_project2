@@ -78,7 +78,7 @@ public interface IAppService {
     @Multipart
     @POST("addDB")
     Call<ResponseBody> addDB(@Part MultipartBody.Part image,
-                             @Part("DB") RequestBody name,
+                             @Part("upload") RequestBody name,
                              @Part("feature1") RequestBody feature1,
                              @Part("feature2") RequestBody feature2);
 }
