@@ -315,16 +315,18 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
                         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                         tempBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                         String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), tempBitmap, "Title", null);
-                        Intent intent = new Intent(Intent.ACTION_SEND);
-                        intent.setType("image/*");
-                        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(path));
-                        Intent chooser = Intent.createChooser(intent, getContext().getString(R.string.share));
-                        if (null != intent.resolveActivity(getContext().getPackageManager())) {
-                            startActivity(chooser);
-                        } else {
-                            Snackbar.make(getView(), "Sending failed.", Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
+                        if (path != null) {
+                            Intent intent = new Intent(Intent.ACTION_SEND);
+                            intent.setType("image/*");
+                            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(path));
+                            Intent chooser = Intent.createChooser(intent, getContext().getString(R.string.share));
+                            if (null != intent.resolveActivity(getContext().getPackageManager())) {
+                                startActivity(chooser);
+                            } else {
+                                Snackbar.make(getView(), "Sending failed.", Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null).show();
+                            }
                         }
                         mGlideRequestManager.clear(futureTarget);
                     }
