@@ -102,9 +102,6 @@ public class HistogramGenerator {
             length = length + histogram[i];
         }
 
-        System.out.println("This is Hue Histogram");
-        System.out.println(Arrays.toString(histogram));
-
         return histogram;
     }
 
@@ -139,13 +136,6 @@ public class HistogramGenerator {
         for (int i = 0; i < step; ++i) {
             length = length + histogram[i];
         }
-
-        for (int i = 0; i < step; ++i){
-            histogram[i] = histogram[i] / length;
-        }
-
-        System.out.println("This is Saturation Histogram");
-        System.out.println(Arrays.toString(histogram));
 
         return histogram;
     }
