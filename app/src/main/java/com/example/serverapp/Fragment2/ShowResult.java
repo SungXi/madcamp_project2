@@ -36,7 +36,7 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
 public class ShowResult extends AppCompatActivity {
-    private final String SERVER = "http://143.248.36.156:3000";
+    private final String SERVER = "http://143.248.36.205:3000";
     private Button back_button;
 
     RecyclerView mRecyclerView;
