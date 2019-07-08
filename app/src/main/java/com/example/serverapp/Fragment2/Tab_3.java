@@ -1,12 +1,14 @@
 package com.example.serverapp.Fragment2;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -126,6 +128,7 @@ public class Tab_3 extends Fragment {
             public void onClick(View view) {
                 Intent galleryIntent = new Intent();
                 galleryIntent.setType("image/*");
+                galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture to Upload"), UPLOAD_IMAGE);
             }
@@ -158,31 +161,30 @@ public class Tab_3 extends Fragment {
             if (resultCode == Activity.RESULT_OK) {
                 try {
                     // make bitmap image
-                    Uri fileUri = data.getData();
-                    InputStream in = getActivity().getContentResolver().openInputStream(fileUri);
-                    Bitmap img = BitmapFactory.decodeStream(in);
-                    in.close();
+                        Uri fileUri = data.getData();
+                        InputStream in = getActivity().getContentResolver().openInputStream(fileUri);
+                        Bitmap img = BitmapFactory.decodeStream(in);
+                        in.close();
 
-                    // resizing image if too big
-                    if (img.getHeight() > PIXEL_THRESHOLD | img.getWidth() > PIXEL_THRESHOLD){
-                        int dstWidth = img.getWidth();
-                        int dstHeight = img.getHeight();
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inSampleSize = 4;
-                        if (dstHeight > dstWidth){
-                            dstWidth = dstWidth*PIXEL_THRESHOLD/dstHeight;
-                            dstHeight = PIXEL_THRESHOLD;
+                        // resizing image if too big
+                        if (img.getHeight() > PIXEL_THRESHOLD | img.getWidth() > PIXEL_THRESHOLD) {
+                            int dstWidth = img.getWidth();
+                            int dstHeight = img.getHeight();
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inSampleSize = 4;
+                            if (dstHeight > dstWidth) {
+                                dstWidth = dstWidth * PIXEL_THRESHOLD / dstHeight;
+                                dstHeight = PIXEL_THRESHOLD;
+                            } else {
+                                dstHeight = dstHeight * PIXEL_THRESHOLD / dstWidth;
+                                dstWidth = PIXEL_THRESHOLD;
+                            }
+                            img = Bitmap.createScaledBitmap(img, dstWidth, dstHeight, true);
                         }
-                        else {
-                            dstHeight = dstHeight*PIXEL_THRESHOLD/dstWidth;
-                            dstWidth = PIXEL_THRESHOLD;
-                        }
-                        img = Bitmap.createScaledBitmap(img, dstWidth, dstHeight, true);
-                    }
 
-                    // show image
-                    result_image.setVisibility(View.VISIBLE);
-                    original_image.setImageBitmap(img);
+                        // show image
+                        result_image.setVisibility(View.VISIBLE);
+                        original_image.setImageBitmap(img);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -190,32 +192,63 @@ public class Tab_3 extends Fragment {
         } else if (requestCode == UPLOAD_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
-                    Uri fileUri = data.getData();
-                    InputStream in = getActivity().getContentResolver().openInputStream(fileUri);
-                    Bitmap img = BitmapFactory.decodeStream(in);
-                    in.close();
+                    if (Build.VERSION.SDK_INT >= 19 && data.getClipData() != null) {
+                        ClipData mClipData = data.getClipData();
+                        for (int i = 0; i < mClipData.getItemCount(); i++) {
+                            ClipData.Item item = mClipData.getItemAt(i);
+                            Uri fileUri = item.getUri();
+                            InputStream in = getActivity().getContentResolver().openInputStream(fileUri);
+                            Bitmap img = BitmapFactory.decodeStream(in);
+                            in.close();
 
-                    // resizing image if too big
-                    if (img.getHeight() > PIXEL_THRESHOLD | img.getWidth() > PIXEL_THRESHOLD){
-                        int dstWidth = img.getWidth();
-                        int dstHeight = img.getHeight();
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inSampleSize = 4;
-                        if (dstHeight > dstWidth){
-                            dstWidth = dstWidth*PIXEL_THRESHOLD/dstHeight;
-                            dstHeight = PIXEL_THRESHOLD;
+                            // resizing image if too big
+                            if (img.getHeight() > PIXEL_THRESHOLD | img.getWidth() > PIXEL_THRESHOLD) {
+                                int dstWidth = img.getWidth();
+                                int dstHeight = img.getHeight();
+                                BitmapFactory.Options options = new BitmapFactory.Options();
+                                options.inSampleSize = 4;
+                                if (dstHeight > dstWidth) {
+                                    dstWidth = dstWidth * PIXEL_THRESHOLD / dstHeight;
+                                    dstHeight = PIXEL_THRESHOLD;
+                                } else {
+                                    dstHeight = dstHeight * PIXEL_THRESHOLD / dstWidth;
+                                    dstWidth = PIXEL_THRESHOLD;
+                                }
+                                img = Bitmap.createScaledBitmap(img, dstWidth, dstHeight, true);
+                            }
+
+                            HistogramGenerator histogramGenerator = new HistogramGenerator();
+                            float[] featureVector = histogramGenerator.getHueDistribution(img);
+                            float[] featureVector2 = histogramGenerator.getSatDistribution(img);
+                            multipartImageUpload(img, featureVector, featureVector2);
                         }
-                        else {
-                            dstHeight = dstHeight*PIXEL_THRESHOLD/dstWidth;
-                            dstWidth = PIXEL_THRESHOLD;
+                    } else if (data.getData() != null) {
+                        Uri fileUri = data.getData();
+                        InputStream in = getActivity().getContentResolver().openInputStream(fileUri);
+                        Bitmap img = BitmapFactory.decodeStream(in);
+                        in.close();
+
+                        // resizing image if too big
+                        if (img.getHeight() > PIXEL_THRESHOLD | img.getWidth() > PIXEL_THRESHOLD) {
+                            int dstWidth = img.getWidth();
+                            int dstHeight = img.getHeight();
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inSampleSize = 4;
+                            if (dstHeight > dstWidth) {
+                                dstWidth = dstWidth * PIXEL_THRESHOLD / dstHeight;
+                                dstHeight = PIXEL_THRESHOLD;
+                            } else {
+                                dstHeight = dstHeight * PIXEL_THRESHOLD / dstWidth;
+                                dstWidth = PIXEL_THRESHOLD;
+                            }
+                            img = Bitmap.createScaledBitmap(img, dstWidth, dstHeight, true);
                         }
-                        img = Bitmap.createScaledBitmap(img, dstWidth, dstHeight, true);
+
+                        HistogramGenerator histogramGenerator = new HistogramGenerator();
+                        float[] featureVector = histogramGenerator.getHueDistribution(img);
+                        float[] featureVector2 = histogramGenerator.getSatDistribution(img);
+                        multipartImageUpload(img, featureVector, featureVector2);
                     }
-
-                    HistogramGenerator histogramGenerator = new HistogramGenerator();
-                    float[] featureVector = histogramGenerator.getHueDistribution(img);
-                    float[] featureVector2 = histogramGenerator.getSatDistribution(img);
-                    multipartImageUpload(img, featureVector, featureVector2);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

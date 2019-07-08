@@ -1,9 +1,11 @@
 package com.example.serverapp.Fragment1;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -140,6 +142,7 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
             public void onClick(View view) {
                 Intent galleryIntent = new Intent();
                 galleryIntent.setType("image/*");
+                galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture to Upload"), SEND_PICTURE);
             }
@@ -340,16 +343,35 @@ public class Fragment1 extends Fragment implements PopupMenu.OnMenuItemClickList
         switch (requestCode) {
             case SEND_PICTURE:
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri selectedImageUri = data.getData();
-                    if (selectedImageUri != null) {
-                        Bitmap bitmap = null;
-                        try {
-                            bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImageUri);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
+                    if (Build.VERSION.SDK_INT >= 19 && data.getClipData() != null) {
+                        ClipData mClipData = data.getClipData();
+                        for (int i = 0; i < mClipData.getItemCount(); i++) {
+                            ClipData.Item item = mClipData.getItemAt(i);
+                            Uri selectedImageUri = item.getUri();
+                            if (selectedImageUri != null) {
+                                Bitmap bitmap = null;
+                                try {
+                                    bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImageUri);
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+                                if (bitmap != null) {
+                                    multipartImageUpload(bitmap);
+                                }
+                            }
                         }
-                        if (bitmap != null) {
-                            multipartImageUpload(bitmap);
+                    } else if (data.getData() != null) {
+                        Uri selectedImageUri = data.getData();
+                        if (selectedImageUri != null) {
+                            Bitmap bitmap = null;
+                            try {
+                                bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImageUri);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                            if (bitmap != null) {
+                                multipartImageUpload(bitmap);
+                            }
                         }
                     }
                 }

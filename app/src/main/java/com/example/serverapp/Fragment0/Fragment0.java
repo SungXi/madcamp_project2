@@ -260,6 +260,7 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
                         }
                     }));
             do {
+                AddressItem new_item;
                 addressList.clear();
                 mAdapter.notifyDataSetChanged();
                 String[] data = new String[3];
@@ -271,7 +272,11 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
                     data[1] = "0" + data[1].substring(3);
                 } // Number
                 data[2] = contactCursor.getString(2); // Address
-                AddressItem new_item = new AddressItem(data[0], data[1], data[2], images[profileIndex]);
+                if (data[2].equals(contactCursor.getString(0))) {
+                    new_item = new AddressItem(data[0], data[1], "test@test.com", images[profileIndex]);
+                } else {
+                    new_item = new AddressItem(data[0], data[1], data[2], images[profileIndex]);
+                }
                 increaseProfileIndex();
                 addressList.add(new_item);
                 mAdapter.notifyItemInserted(mAdapter.getData().size() - 1);
@@ -403,7 +408,6 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
                                 }
                             }
                         }));
-
                 mAdapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
