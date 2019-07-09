@@ -200,39 +200,41 @@ public class Fragment0 extends Fragment implements SwipeRefreshLayout.OnRefreshL
             }
         });
 
-        compositeDisposable.add(iAppService.updatePerson(((MainActivity) getActivity()).getOwnerEmail())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String data) throws Exception {
-                        if (!data.isEmpty()) {
-                            String jsonString = "{\"data\": " + data + " }";
-                            JsonParser jsonParser = new JsonParser();
-                            addressList.clear();
-                            mAdapter.notifyDataSetChanged();
-                            Log.e("Refresh", jsonString);
-                            JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
-                            JsonArray memberArray = (JsonArray) jsonObject.get("data");
-                            try {
-                                JsonObject testObject = (JsonObject) memberArray.get(0);
-                            } catch (OnErrorNotImplementedException ex) {
-                                memberArray = (JsonArray) memberArray.get(0);
-                            }
+        if (((MainActivity) getActivity()).getOwnerEmail() != null) {
+            compositeDisposable.add(iAppService.updatePerson(((MainActivity) getActivity()).getOwnerEmail())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<String>() {
+                        @Override
+                        public void accept(String data) throws Exception {
+                            if (!data.isEmpty()) {
+                                String jsonString = "{\"data\": " + data + " }";
+                                JsonParser jsonParser = new JsonParser();
+                                addressList.clear();
+                                mAdapter.notifyDataSetChanged();
+                                Log.e("Refresh", jsonString);
+                                JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
+                                JsonArray memberArray = (JsonArray) jsonObject.get("data");
+                                try {
+                                    JsonObject testObject = (JsonObject) memberArray.get(0);
+                                } catch (OnErrorNotImplementedException ex) {
+                                    memberArray = (JsonArray) memberArray.get(0);
+                                }
 
-                            for (int i = 0; i < memberArray.size(); i++) {
-                                JsonObject tempObject = (JsonObject) memberArray.get(i);
-                                String nameString = tempObject.get("name").toString().replace("\"", "");
-                                String numberString = tempObject.get("number").toString().replace("\"", "");
-                                String emailString = tempObject.get("email").toString().replace("\"", "");
-                                AddressItem item = new AddressItem(nameString, numberString, emailString, images[profileIndex]);
-                                increaseProfileIndex();
-                                addressList.add(item);
-                                mAdapter.notifyItemInserted(mAdapter.getData().size() - 1);
+                                for (int i = 0; i < memberArray.size(); i++) {
+                                    JsonObject tempObject = (JsonObject) memberArray.get(i);
+                                    String nameString = tempObject.get("name").toString().replace("\"", "");
+                                    String numberString = tempObject.get("number").toString().replace("\"", "");
+                                    String emailString = tempObject.get("email").toString().replace("\"", "");
+                                    AddressItem item = new AddressItem(nameString, numberString, emailString, images[profileIndex]);
+                                    increaseProfileIndex();
+                                    addressList.add(item);
+                                    mAdapter.notifyItemInserted(mAdapter.getData().size() - 1);
+                                }
                             }
                         }
-                    }
-                }));
+                    }));
+        }
 
         mAdapter.notifyDataSetChanged();
         return view;
